@@ -1,0 +1,36 @@
+application:
+  name: TrafficVision AI
+  environment: development
+
+model:
+  name: yolo11n.pt
+  confidence: 0.35
+  iou: 0.50
+  image_size: 640
+  device: auto
+
+tracking:
+  algorithm: bytetrack
+  track_buffer: 30
+
+video:
+  frame_skip: 0
+  max_upload_mb: 100
+  max_duration_seconds: 300
+
+counting:
+  anchor: bottom_center
+  hysteresis_pixels: 8
+  minimum_track_age: 3
+  cooldown_frames: 5
+
+storage:
+  database: trafficvision.db
+
+logging:
+  level: INFO
+
+speed:
+  enabled: true
+  pixels_per_meter: 10.0
+  smoothing_window: 5

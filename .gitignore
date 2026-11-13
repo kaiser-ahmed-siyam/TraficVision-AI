@@ -1,0 +1,17 @@
+.worktrees/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+.env
+*.db
+data/input/*
+data/output/*
+data/samples/*
+*.mp4
+*.avi
+*.mov
+runs/
+.DS_Store
