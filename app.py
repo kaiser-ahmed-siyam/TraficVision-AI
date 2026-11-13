@@ -16,6 +16,7 @@ from dashboard.settings_panel import render_settings
 from dashboard.sidebar import render_sidebar
 from dashboard.video_panel import render_live_monitor, render_video_analysis
 from utils.logger import configure_logging
+from utils.video_utils import ensure_h264
 
 
 def _process_uploaded_video(source: Path, selected_classes, confidence, line_position, direction, pixels_per_meter, frame_callback, settings):
@@ -30,14 +31,17 @@ def _process_uploaded_video(source: Path, selected_classes, confidence, line_pos
 
     if source.stat().st_size > settings.video.max_upload_mb * 1024 * 1024:
         raise ValueError(f"Video exceeds the {settings.video.max_upload_mb} MB upload limit")
+    playable = ensure_h264(source)  # transcode AV1/HEVC/etc. to H.264 so OpenCV can read it
     detector = VehicleDetector(settings.model.name, settings.model.device, confidence, settings.model.iou, settings.model.image_size, selected_classes=selected_classes)
-    reader = VideoReader(source)
+    reader = VideoReader(playable)
     if not reader.open():
         raise RuntimeError(reader.last_error or "Unable to open uploaded video")
     metadata = reader.get_metadata()
     if metadata.duration_seconds > settings.video.max_duration_seconds:
         reader.release()
         source.unlink(missing_ok=True)
+        if playable != source:
+            playable.unlink(missing_ok=True)
         raise ValueError(f"Video exceeds the {settings.video.max_duration_seconds} second duration limit")
     line_y = metadata.height * float(line_position) / 100.0
     line = LineConfig(
@@ -77,6 +81,8 @@ def _process_uploaded_video(source: Path, selected_classes, confidence, line_pos
         repository.close()
         reader.release()
         source.unlink(missing_ok=True)
+        if playable != source:
+            playable.unlink(missing_ok=True)
         output.unlink(missing_ok=True)
 
 
