@@ -1,5 +1,19 @@
+# ultralytics==8.3.0
+# opencv-python-headless==4.10.0.84
+# numpy==1.26.4
+# pandas==2.2.3
+# supervision==0.25.1
+# streamlit==1.39.0
+# plotly==5.24.1
+# pillow==10.4.0
+# pyyaml==6.0.2
+# onnxruntime==1.19.2
+# psutil==6.0.0
+# libgl1
+# libglib2.0-0
+--extra-index-url https://download.pytorch.org/whl/cpu
 ultralytics==8.3.0
-opencv-python==4.10.0.84
+opencv-python-headless==4.10.0.84
 numpy==1.26.4
 pandas==2.2.3
 supervision==0.25.1
